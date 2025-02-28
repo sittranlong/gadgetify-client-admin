@@ -11,7 +11,9 @@ export default defineConfig({
         vue(), tailwindcss(),
         Components({
             resolvers: [
-                AntDesignVueResolver({}),
+                AntDesignVueResolver({
+                    importStyle: "css-in-js",
+                }),
             ],
         }),
     ],

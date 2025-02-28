@@ -1,25 +1,26 @@
 <script setup>
 import {useI18n} from "vue-i18n";
-import {ref, computed} from 'vue';
+import {ref, computed, onMounted, onBeforeUnmount} from 'vue';
 import {Plus, Pencil, Trash2, Search} from 'lucide-vue-next';
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
+import useCategoryStore from "@/stores/category.js";
+
+const categoryStore = useCategoryStore();
 
 const {t} = useI18n();
 const searchQuery = ref('');
 const route = useRoute();
-// Mock data for demonstration
-const categories = ref([
-  {id: 1, name: "Electronics"},
-  {id: 2, name: "Clothing"},
-  {id: 3, name: "Books"},
-  {id: 4, name: "Sports"},
-]);
-
+const router = useRouter()
 const filteredCategories = computed(() => {
-  return categories.value.filter(category =>
-      category.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  return categoryStore.categoriesList.filter(category =>
+      category.tenDanhMuc.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
+onMounted(async () => {
+  if (route.name === 'categories') {
+    await categoryStore.getCategoriesList();
+  }
+})
 </script>
 
 <template>
@@ -41,7 +42,7 @@ const filteredCategories = computed(() => {
               class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shrink-0"
           >
             <Plus class="w-4 h-4"/>
-            <span>{{ t('add_category') }}</span>
+            <span>{{ t('add', {content: t('categories')}) }}</span>
           </button>
         </RouterLink>
 
@@ -76,22 +77,30 @@ const filteredCategories = computed(() => {
               {{ category.id }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ category.name }}
+              {{ category.tenDanhMuc }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               <div class="flex gap-3">
                 <button
+                    @click="router.push(`/categories/${category.id}`)"
                     class="p-1 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
                     :title="t('edit')"
                 >
                   <Pencil class="w-4 h-4"/>
                 </button>
-                <button
-                    class="p-1 text-red-600 hover:bg-red-50 rounded-full transition-colors"
-                    :title="t('delete')"
+                <a-popconfirm
+                    :title="t('confirm_delete')"
+                    :ok-text="t('yes')"
+                    :cancel-text="t('cancel')"
+                    @confirm="categoryStore.deleteCategory(category.id)"
                 >
-                  <Trash2 class="w-4 h-4"/>
-                </button>
+                  <button
+                      class="p-1 text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                      :title="t('delete')"
+                  >
+                    <Trash2 class="w-4 h-4"/>
+                  </button>
+                </a-popconfirm>
               </div>
             </td>
           </tr>

@@ -159,12 +159,12 @@
                   <ChevronRight class="h-4 w-4  mx-2"/>
                   <RouterLink v-if="!breadcrumb.active" class="text-gray-700 hover:text-indigo-600" :to="breadcrumb.to">
                     {{
-                      t(breadcrumb.text)
+                      breadcrumb.text
                     }}
                   </RouterLink>
                   <span v-else class="text-gray-700 hover:text-indigo-600">
                     {{
-                      t(breadcrumb.text)
+                      breadcrumb.text
                     }}
                   </span>
                 </div>
