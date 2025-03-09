@@ -1,6 +1,6 @@
 <script setup>
 import {useI18n} from "vue-i18n";
-import {Languages, CircleX, CheckCheck, AtSign} from 'lucide-vue-next';
+import {Languages, CircleX, CheckCheck, AtSign, CheckCircle} from 'lucide-vue-next';
 import {computed, onMounted, ref} from "vue";
 import useCategoryStore from "@/stores/category.js";
 import {useRoute} from "vue-router";
@@ -100,16 +100,15 @@ onMounted(async () => {
         <button
             @click="$router.push('/categories')"
             type="button"
-            class="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-200 transition-all duration-200 flex items-center gap-2"
+            class="px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 transition-all duration-200 font-medium"
         >
-          <CircleX class="w-5 h-5"/>
           {{ t('cancel') }}
         </button>
         <button
             type="submit"
-            class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 transition-all duration-200 flex items-center gap-2"
+            class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 transition-all duration-200 font-medium flex items-center gap-2"
         >
-          <CheckCheck class="w-5 h-5"/>
+          <CheckCircle class="w-5 h-5"/>
           {{ t('save') }}
         </button>
       </div>

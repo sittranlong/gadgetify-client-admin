@@ -30,8 +30,8 @@
      focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200
      hover:border-indigo-300 cursor-pointer transition-all duration-200 ease-in-out
      bg-gradient-to-r from-white to-gray-50 shadow-sm text-sm">
-              <option value="vi">VN</option>
-              <option value="en">ENG</option>
+              <option :selected="currentLocale === 'vi'" value="vi">VN</option>
+              <option :selected="currentLocale === 'en'" value="en">ENG</option>
             </select>
             <ChevronDown class="h-4 w-4 text-gray-500 absolute right-2 md:right-3 top-1/2 -translate-y-1/2
      pointer-events-none transition-transform duration-200 group-hover:text-indigo-500
@@ -179,7 +179,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted, onUnmounted, ref} from 'vue'
+import {computed, onBeforeMount, onMounted, onUnmounted, ref} from 'vue'
 import {
   BarChart,
   Bell,
@@ -204,8 +204,15 @@ const route = useRoute()
 const breadcrumbs = computed(() => route.meta.breadcrumbs || null)
 const numberFormatStore = useNumberFormat()
 const {t, locale} = useI18n({useScope: 'global'})
+const currentLocale = computed(() => {
+  return localStorage.getItem('currentLocale') || 'vi'
+})
+onBeforeMount(() => {
+  locale.value = currentLocale.value
+});
 const changeLocale = (e) => {
   locale.value = e.target.value
+  localStorage.setItem('currentLocale', e.target.value)
 }
 // Responsive state
 const windowWidth = ref(window.innerWidth)
@@ -233,7 +240,7 @@ const navigationItems = ref([
   {
     name: computed(() => {
       return t('products')
-    }), href: '#', icon: Package, active: false
+    }), href: '/products', icon: Package, active: computed(() => route.path.includes('products'))
   },
   {
     name: computed(() => {

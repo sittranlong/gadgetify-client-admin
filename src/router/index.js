@@ -60,6 +60,55 @@ const router = createRouter({
                 },
             ]
         },
+        {
+            path: '/products',
+            name: 'products',
+            component: () => import('../views/products/ProductsView.vue'),
+            meta: {
+                breadcrumbs: [
+                    {
+                        active: true,
+                        text: computed(() => useI18n().t('products')),
+                    }
+                ],
+            },
+            children: [
+                {
+                    path: '/products/add',
+                    name: 'add-product',
+                    component: () => import('../views/products/AddProductView.vue'),
+                    meta: {
+                        breadcrumbs: [
+                            {
+                                text: computed(() => useI18n().t('products')),
+                                to: '/products',
+                            },
+                            {
+                                active: true,
+                                text: computed(() => useI18n().t('add', {content: useI18n().t('product')})),
+                            }
+                        ],
+                    },
+                },
+                {
+                    path: '/products/:id',
+                    name: 'edit-product',
+                    component: () => import('../views/products/EditProductView.vue'),
+                    meta: {
+                        breadcrumbs: [
+                            {
+                                text: computed(() => useI18n().t('products')),
+                                to: '/products',
+                            },
+                            {
+                                active: true,
+                                text: computed(() => useI18n().t(`edit`, {content: useI18n().t('product')})),
+                            }
+                        ],
+                    },
+                },
+            ]
+        }
     ],
 })
 
