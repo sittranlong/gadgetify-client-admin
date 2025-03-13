@@ -19,6 +19,7 @@ import AddCategoryView from "@/views/categories/AddCategoryView.vue";
 import useProductStore from "@/stores/product.js";
 import useCloudinaryStore from "@/stores/cloudinary.js";
 import {useRoute} from "vue-router";
+import axios from "axios";
 
 const {t} = useI18n();
 const activeKey = ref(['1']);
@@ -240,9 +241,13 @@ const handleColorSubmit = () => {
 
   colorModalVisible.value = false;
 };
-
+const deletedColorId = [];
 const deleteColor = (index) => {
+  if (colorList.value[index].id) {
+    deletedColorId.push(colorList.value[index].id);
+  }
   colorList.value.splice(index, 1);
+  console.log(deletedColorId);
   message.success(t('delete_success_msg', {content: t('color')}));
 };
 
@@ -282,7 +287,6 @@ const categoryStore = useCategoryStore();
 const productStore = useProductStore();
 const cloudinaryStore = useCloudinaryStore();
 let productEnId = null;
-let detailId = null;
 const saveProduct = async () => {
   if (colorList.value.length < 2 && useColorVariants.value) {
     message.error(t('color_at_least_two'));
@@ -343,9 +347,13 @@ const saveProduct = async () => {
     await productStore.saveAllImages(imageList);
   }
   if (useColorVariants.value) {
-    await productStore.deleteProductDetail(productParamId.value);
+    // await productStore.deleteProductDetail(productParamId.value);
+    for (const id of deletedColorId) {
+      await axios.delete(`/chi-tiet-san-pham/${id}`);
+    }
     for (const color of colorList.value) {
       const colorVN = {
+        id: color.id || null,
         sanPham: {id: savedProduct.id},
         mauSac: color.nameVn,
         sku: color.sku,
@@ -371,8 +379,9 @@ const saveProduct = async () => {
       }
     }
   } else {
-    await productStore.deleteProductDetail(productParamId.value);
+    // await axios.delete(`/san-pham/mau-sac/lang/san-pham/${productDetailId}`);
     await productStore.saveProductDetail({
+      id: productDetailId,
       sanPham: {id: savedProduct.id},
       sku: productForm.value.sku,
       tonKho: productForm.value.tonKho
@@ -382,6 +391,7 @@ const saveProduct = async () => {
   await productStore.getProductsList()
   message.success(t('save_success_msg', {content: t('product')}));
 }
+let productDetailId = null
 const route = useRoute();
 const productParamId = computed(() => route.params.id);
 onMounted(async () => {
@@ -417,6 +427,7 @@ onMounted(async () => {
     useColorVariants.value = true;
     for (const detail of productDetails) {
       const color = {
+        id: detail.id,
         nameVn: detail.mauSac,
         nameEn: detail.mauSacEn,
         stock: detail.tonKho,
@@ -429,7 +440,7 @@ onMounted(async () => {
   } else {
     productForm.value.tonKho = productDetails[0].tonKho;
     productForm.value.sku = productDetails[0].sku;
-    detailId = productDetails[0].id;
+    productDetailId = productDetails[0].id;
   }
 
 });

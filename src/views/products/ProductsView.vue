@@ -82,7 +82,7 @@
 
             <!-- Price Column -->
             <template v-else-if="column.dataIndex === 'giaCoSo'">
-              {{ n(record.giaCoSo, 'currency') }}
+              {{ displayCurrency(record.giaCoSo || 0) }}
             </template>
 
             <!-- Status Column -->
@@ -107,7 +107,7 @@
                     class="p-1 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
                     :title="t('edit')"
                 >
-                  <Edit class="w-4 h-4"/>
+                  <Eye class="w-4 h-4"/>
                 </button>
                 <a-popconfirm
                     v-if="record.trangThai"
@@ -120,7 +120,7 @@
                       class="p-1 text-red-600 hover:bg-red-50 rounded-full transition-colors"
                       :title="t('off_sell')"
                   >
-                    <Trash2 class="w-4 h-4"/>
+                    <CirclePause class="w-4 h-4"/>
                   </button>
                 </a-popconfirm>
               </div>
@@ -134,12 +134,13 @@
 </template>
 
 <script setup>
-import {ref, computed, onMounted, watch, onBeforeMount} from 'vue';
+import {ref, computed, onMounted} from 'vue';
 import {message} from 'ant-design-vue';
-import {Search, Edit, Trash2, Plus} from 'lucide-vue-next';
+import {Search, Plus, Eye, CirclePause} from 'lucide-vue-next';
 import {useI18n} from 'vue-i18n';
 import {useRoute} from "vue-router";
 import useProductStore from "@/stores/product.js";
+import displayCurrency from "../../utils/currencyUtil.js";
 
 const route = useRoute();
 const productStore = useProductStore();

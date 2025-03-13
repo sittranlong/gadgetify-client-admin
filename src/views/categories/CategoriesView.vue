@@ -1,7 +1,7 @@
 <script setup>
 import {useI18n} from "vue-i18n";
 import {ref, computed, onMounted, onBeforeUnmount} from 'vue';
-import {Plus, Pencil, Trash2, Search} from 'lucide-vue-next';
+import {Plus, Pencil, Trash2, Search, Eye} from 'lucide-vue-next';
 import {useRoute, useRouter} from "vue-router";
 import useCategoryStore from "@/stores/category.js";
 
@@ -86,7 +86,7 @@ onMounted(async () => {
                     class="p-1 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
                     :title="t('edit')"
                 >
-                  <Pencil class="w-4 h-4"/>
+                  <Eye class="w-4 h-4"/>
                 </button>
                 <a-popconfirm
                     :title="t('confirm_delete')"

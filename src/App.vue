@@ -213,6 +213,7 @@ onBeforeMount(() => {
 const changeLocale = (e) => {
   locale.value = e.target.value
   localStorage.setItem('currentLocale', e.target.value)
+  window.location.reload()
 }
 // Responsive state
 const windowWidth = ref(window.innerWidth)
@@ -245,7 +246,7 @@ const navigationItems = ref([
   {
     name: computed(() => {
       return t('orders')
-    }), href: '#', icon: ShoppingCart, active: false
+    }), href: '/orders', icon: ShoppingCart, active: computed(() => route.path.includes('orders'))
   },
   {
     name: computed(() => {

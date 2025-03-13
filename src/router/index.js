@@ -108,6 +108,38 @@ const router = createRouter({
                     },
                 },
             ]
+        },
+        {
+            path: '/orders',
+            name: 'orders',
+            component: () => import('../views/orders/OrdersView.vue'),
+            meta: {
+                breadcrumbs: [
+                    {
+                        active: true,
+                        text: computed(() => useI18n().t('orders')),
+                    }
+                ],
+            },
+            children: [
+                {
+                    path: '/orders/:id',
+                    name: 'order-detail',
+                    component: () => import('../views/orders/OrderDetailView.vue'),
+                    meta: {
+                        breadcrumbs: [
+                            {
+                                text: computed(() => useI18n().t('orders')),
+                                to: '/orders',
+                            },
+                            {
+                                active: true,
+                                text: computed(() => useI18n().t('order_details')),
+                            }
+                        ],
+                    },
+                },
+            ]
         }
     ],
 })
