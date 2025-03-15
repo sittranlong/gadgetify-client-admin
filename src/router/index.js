@@ -140,6 +140,55 @@ const router = createRouter({
                     },
                 },
             ]
+        },
+        {
+            path: '/vouchers',
+            name: 'vouchers',
+            component: () => import('../views/vouchers/VouchersView.vue'),
+            meta: {
+                breadcrumbs: [
+                    {
+                        active: true,
+                        text: computed(() => useI18n().t('voucher')),
+                    }
+                ],
+            },
+            children: [
+                {
+                    path: '/vouchers/add',
+                    name: 'add-voucher',
+                    component: () => import('../views/vouchers/AddVoucherView.vue'),
+                    meta: {
+                        breadcrumbs: [
+                            {
+                                text: computed(() => useI18n().t('voucher')),
+                                to: '/vouchers',
+                            },
+                            {
+                                active: true,
+                                text: computed(() => useI18n().t('add', {content: useI18n().t('voucher')})),
+                            }
+                        ],
+                    },
+                },
+                {
+                    path: '/vouchers/:id',
+                    name: 'edit-voucher',
+                    component: () => import('../views/vouchers/EditVoucherView.vue'),
+                    meta: {
+                        breadcrumbs: [
+                            {
+                                text: computed(() => useI18n().t('voucher')),
+                                to: '/vouchers',
+                            },
+                            {
+                                active: true,
+                                text: computed(() => useI18n().t('edit', {content: useI18n().t('voucher')})),
+                            }
+                        ],
+                    },
+                },
+            ]
         }
     ],
 })

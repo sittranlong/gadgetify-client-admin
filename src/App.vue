@@ -181,6 +181,7 @@
 <script setup>
 import {computed, onBeforeMount, onMounted, onUnmounted, ref} from 'vue'
 import {
+  Ticket,
   BarChart,
   Bell,
   ChevronDown,
@@ -252,6 +253,11 @@ const navigationItems = ref([
     name: computed(() => {
       return t('categories')
     }), href: '/categories', icon: ListTree, active: computed(() => route.path.includes('categories'))
+  },
+  {
+    name: computed(() => {
+      return t('voucher')
+    }), href: '/vouchers', icon: Ticket, active: computed(() => route.path.includes('vouchers'))
   },
 ])
 
