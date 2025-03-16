@@ -189,6 +189,55 @@ const router = createRouter({
                     },
                 },
             ]
+        },
+        {
+            path: '/promotions',
+            name: 'promotions',
+            component: () => import('../views/promotions/PromotionsView.vue'),
+            meta: {
+                breadcrumbs: [
+                    {
+                        active: true,
+                        text: computed(() => useI18n().t('promotion')),
+                    }
+                ],
+            },
+            children: [
+                {
+                    path: '/promotions/add',
+                    name: 'add-promotion',
+                    component: () => import('../views/promotions/AddPromotionView.vue'),
+                    meta: {
+                        breadcrumbs: [
+                            {
+                                text: computed(() => useI18n().t('promotion')),
+                                to: '/promotions',
+                            },
+                            {
+                                active: true,
+                                text: computed(() => useI18n().t('add', {content: useI18n().t('promotion')})),
+                            }
+                        ],
+                    },
+                },
+                {
+                    path: '/promotions/:id',
+                    name: 'edit-promotion',
+                    component: () => import('../views/promotions/EditPromotionView.vue'),
+                    meta: {
+                        breadcrumbs: [
+                            {
+                                text: computed(() => useI18n().t('promotion')),
+                                to: '/promotions',
+                            },
+                            {
+                                active: true,
+                                text: computed(() => useI18n().t('edit', {content: useI18n().t('promotion')})),
+                            }
+                        ],
+                    },
+                },
+            ]
         }
     ],
 })

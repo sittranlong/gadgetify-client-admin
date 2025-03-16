@@ -34,65 +34,69 @@
     <!-- Orders Table -->
     <div class="bg-white rounded-lg shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
-        <a-table
-            :columns="columns"
-            :data-source="filteredOrders"
-            :pagination="pagination"
-            :loading="loading"
-            @change="handleTableChange"
-            :row-key="record => record.id"
-            class="min-w-full"
-        >
-          <!-- Order ID Column -->
-          <template #bodyCell="{ column, record }">
-            <template v-if="column.dataIndex === 'maDonHang'">
-              <span class="font-medium">{{ record.maDonHang }}</span>
-            </template>
-
-            <!-- Status Column -->
-            <template v-else-if="column.dataIndex === 'trangThai'">
-              <a-tag :color="getStatusColor(record.trangThai)">
-                {{ getStatusText(record.trangThai) }}
-              </a-tag>
-            </template>
-
-            <!-- Total Column -->
-            <template v-else-if="column.dataIndex === 'tongTien'">
-              {{ n(record.tongTien, 'currency') }}
-            </template>
-
-            <!-- Payment Method Column -->
-            <template v-else-if="column.dataIndex === 'phuongThucThanhToan'">
-              {{ getPaymentMethodText(record.phuongThucThanhToan) }}
-            </template>
-
-            <!-- Date Column -->
-            <template v-else-if="column.dataIndex === 'ngayTao'">
-              {{ d(record.ngayTao, 'long') }}
-            </template>
-
-            <!-- Actions Column -->
-            <template v-else-if="column.dataIndex === 'actions'">
-              <div class="flex gap-3">
-                <button
-                    @click="$router.push(`/orders/${record.id}`)"
-                    class="p-1 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-                    :title="t('view_details')"
-                >
-                  <Eye class="w-4 h-4"/>
-                </button>
-                <button
-                    v-if="canMoveToNextStatus(record.trangThai)"
-                    @click="updateStatus(record.id)"
-                    class="p-1 text-green-600 hover:bg-green-50 rounded-full transition-colors"
-                    :title="getNextStatusActionText(record.trangThai)"
-                >
-                  <ArrowRight class="w-4 h-4"/>
-                </button>
-              </div>
-            </template>
+        <a-config-provider>
+          <template #renderEmpty>
+            <a-empty :description="t('no_data')"/>
           </template>
-        </a-table>
+          <a-table
+              :columns="columns"
+              :data-source="filteredOrders"
+              :pagination="pagination"
+              :loading="loading"
+              @change="handleTableChange"
+              :row-key="record => record.id"
+              class="min-w-full">
+            <!-- Order ID Column -->
+            <template #bodyCell="{ column, record }">
+              <template v-if="column.dataIndex === 'maDonHang'">
+                <span class="font-medium">{{ record.maDonHang }}</span>
+              </template>
+
+              <!-- Status Column -->
+              <template v-else-if="column.dataIndex === 'trangThai'">
+                <a-tag :color="getStatusColor(record.trangThai)">
+                  {{ getStatusText(record.trangThai) }}
+                </a-tag>
+              </template>
+
+              <!-- Total Column -->
+              <template v-else-if="column.dataIndex === 'tongTien'">
+                {{ n(record.tongTien, 'currency') }}
+              </template>
+
+              <!-- Payment Method Column -->
+              <template v-else-if="column.dataIndex === 'phuongThucThanhToan'">
+                {{ getPaymentMethodText(record.phuongThucThanhToan) }}
+              </template>
+
+              <!-- Date Column -->
+              <template v-else-if="column.dataIndex === 'ngayTao'">
+                {{ d(record.ngayTao, 'long') }}
+              </template>
+
+              <!-- Actions Column -->
+              <template v-else-if="column.dataIndex === 'actions'">
+                <div class="flex gap-3">
+                  <button
+                      @click="$router.push(`/orders/${record.id}`)"
+                      class="p-1 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                      :title="t('view_details')"
+                  >
+                    <Eye class="w-4 h-4"/>
+                  </button>
+                  <button
+                      v-if="canMoveToNextStatus(record.trangThai)"
+                      @click="updateStatus(record.id)"
+                      class="p-1 text-green-600 hover:bg-green-50 rounded-full transition-colors"
+                      :title="getNextStatusActionText(record.trangThai)"
+                  >
+                    <ArrowRight class="w-4 h-4"/>
+                  </button>
+                </div>
+              </template>
+            </template>
+          </a-table>
+        </a-config-provider>
       </div>
     </div>
   </div>

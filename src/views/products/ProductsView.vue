@@ -58,75 +58,86 @@
     <div
         class="bg-white rounded-lg shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
-        <a-table
-            :columns="columns"
-            :data-source="filteredProducts"
-            :pagination="pagination"
-            :loading="loading"
-            @change="handleTableChange"
-            :row-key="record => record.id"
-            class="min-w-full"
-        >
-          <!-- Product Name Column -->
-          <template #bodyCell="{ column, record }">
-            <template v-if="column.dataIndex === 'tenSanPham'">
-              <div class="flex items-center">
-                <img
-                    :src="record.anhDaiDien"
-                    :alt="record.tenSanPham"
-                    class="w-10 h-10 object-cover rounded mr-3"
-                />
-                <span>{{ record.tenSanPham }}</span>
-              </div>
-            </template>
-
-            <!-- Price Column -->
-            <template v-else-if="column.dataIndex === 'giaCoSo'">
-              {{ displayCurrency(record.giaCoSo || 0) }}
-            </template>
-
-            <!-- Status Column -->
-            <template v-else-if="column.dataIndex === 'trangThai'">
-              <a-tag :color="record.trangThai ? 'success' : 'error'">
-                {{ record.trangThai ? t('on_sell') : t('off_sell') }}
-              </a-tag>
-            </template>
-
-            <!-- Inventory Status Column -->
-            <template v-else-if="column.dataIndex === 'trangThaiKho'">
-              <a-tag :color="isInStock(record.trangThaiKho) ? 'blue' : 'orange'">
-                {{ getStockStatusText(record.trangThaiKho) }}
-              </a-tag>
-            </template>
-
-            <!-- Actions Column -->
-            <template v-else-if="column.dataIndex === 'actions'">
-              <div class="flex gap-3">
-                <button
-                    @click="$router.push(`/products/${record.id}`)"
-                    class="p-1 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-                    :title="t('edit')"
-                >
-                  <Eye class="w-4 h-4"/>
-                </button>
-                <a-popconfirm
-                    v-if="record.trangThai"
-                    :title="`${t('confirm')} ${t('off_sell')}?`"
-                    :ok-text="t('yes')"
-                    :cancel-text="t('cancel')"
-                    @confirm="handleStopSell(record)"
-                >
-                  <button
-                      class="p-1 text-red-600 hover:bg-red-50 rounded-full transition-colors"
-                      :title="t('off_sell')"
-                  >
-                    <CirclePause class="w-4 h-4"/>
-                  </button>
-                </a-popconfirm>
-              </div>
-            </template>
+        <a-config-provider>
+          <template #renderEmpty>
+            <a-empty :description="t('no_data')"/>
           </template>
-        </a-table>
+          <a-table
+              :columns="columns"
+              :data-source="filteredProducts"
+              :pagination="pagination"
+              :loading="loading"
+              @change="handleTableChange"
+              :row-key="record => record.id"
+              class="min-w-full">
+            <!-- Product Name Column -->
+            <template #bodyCell="{ column, record }">
+              <template v-if="column.dataIndex === 'tenSanPham'">
+                <div class="flex items-center">
+                  <img
+                      :src="record.anhDaiDien"
+                      :alt="record.tenSanPham"
+                      class="w-10 h-10 object-cover rounded mr-3"
+                  />
+                  <span>{{ record.tenSanPham }}</span>
+                </div>
+              </template>
+
+              <!-- Price Column -->
+              <template v-else-if="column.dataIndex === 'giaCoSo'">
+                <a-tag :title="t('base_price')" color="blue">
+                  {{ displayCurrency(record.giaCoSo || 0) }}
+                </a-tag>
+                <br>
+                <a-tag :title="t('promotion_price')" style="margin-top: 5px" color="green"
+                       v-if="record.giaSauKhuyenMai < record.giaCoSo">
+                  {{ displayCurrency(record.giaSauKhuyenMai || 0) }}
+                </a-tag>
+              </template>
+
+              <!-- Status Column -->
+              <template v-else-if="column.dataIndex === 'trangThai'">
+                <a-tag :color="record.trangThai ? 'success' : 'error'">
+                  {{ record.trangThai ? t('on_sell') : t('off_sell') }}
+                </a-tag>
+              </template>
+
+              <!-- Inventory Status Column -->
+              <template v-else-if="column.dataIndex === 'trangThaiKho'">
+                <a-tag :color="isInStock(record.trangThaiKho) ? 'blue' : 'orange'">
+                  {{ getStockStatusText(record.trangThaiKho) }}
+                </a-tag>
+              </template>
+
+              <!-- Actions Column -->
+              <template v-else-if="column.dataIndex === 'actions'">
+                <div class="flex gap-3">
+                  <button
+                      @click="$router.push(`/products/${record.id}`)"
+                      class="p-1 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                      :title="t('edit')"
+                  >
+                    <Eye class="w-4 h-4"/>
+                  </button>
+                  <a-popconfirm
+                      v-if="record.trangThai"
+                      :title="`${t('confirm')} ${t('off_sell')}?`"
+                      :ok-text="t('yes')"
+                      :cancel-text="t('cancel')"
+                      @confirm="handleStopSell(record)"
+                  >
+                    <button
+                        class="p-1 text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                        :title="t('off_sell')"
+                    >
+                      <CirclePause class="w-4 h-4"/>
+                    </button>
+                  </a-popconfirm>
+                </div>
+              </template>
+            </template>
+          </a-table>
+        </a-config-provider>
       </div>
     </div>
   </div>

@@ -1,6 +1,6 @@
 <script setup>
 import {useI18n} from "vue-i18n";
-import {Languages, CircleX, CheckCheck, AtSign, CheckCircle} from 'lucide-vue-next';
+import {AtSign, CheckCheck, CheckCircle, Languages} from 'lucide-vue-next';
 import {computed, onMounted, ref} from "vue";
 import useCategoryStore from "@/stores/category.js";
 import {useRoute} from "vue-router";

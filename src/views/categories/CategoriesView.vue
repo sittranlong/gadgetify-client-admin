@@ -68,7 +68,7 @@ onMounted(async () => {
             </th>
           </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody v-if="filteredCategories.length > 0" class="bg-white divide-y divide-gray-200">
           <tr v-for="(category, index) in filteredCategories" :key="category.id" class="hover:bg-gray-50">
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               {{ index + 1 }}
@@ -102,6 +102,13 @@ onMounted(async () => {
                   </button>
                 </a-popconfirm>
               </div>
+            </td>
+          </tr>
+          </tbody>
+          <tbody v-else class="bg-white divide-y divide-gray-200">
+          <tr>
+            <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+              <a-empty :description="t('no_data')"/>
             </td>
           </tr>
           </tbody>

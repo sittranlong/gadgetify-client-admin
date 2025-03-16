@@ -181,6 +181,7 @@
 <script setup>
 import {computed, onBeforeMount, onMounted, onUnmounted, ref} from 'vue'
 import {
+  BadgePercent,
   Ticket,
   BarChart,
   Bell,
@@ -258,6 +259,11 @@ const navigationItems = ref([
     name: computed(() => {
       return t('voucher')
     }), href: '/vouchers', icon: Ticket, active: computed(() => route.path.includes('vouchers'))
+  },
+  {
+    name: computed(() => {
+      return t('promotion')
+    }), href: '/promotions', icon: BadgePercent, active: computed(() => route.path.includes('promotions'))
   },
 ])
 

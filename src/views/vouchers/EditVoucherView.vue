@@ -1,14 +1,16 @@
 <script setup>
 import {useI18n} from "vue-i18n";
 import {
-  CirclePlus,
-  Tag,
+  AtSign,
+  CalendarCheck,
+  CalendarX,
+  CheckCheck,
+  CheckCircle,
+  CreditCard,
   DollarSign,
   Package,
   ShoppingCart,
-  CreditCard,
-  CalendarCheck,
-  CalendarX, CheckCircle, AtSign,
+  Tag,
 } from 'lucide-vue-next';
 import {onMounted, ref} from "vue";
 import useVoucherStore from "@/stores/voucher.js";
@@ -54,7 +56,7 @@ onMounted(async () => {
 <template>
   <div class="bg-white rounded-xl shadow-md p-6">
     <div class="flex items-center gap-3 mb-6">
-      <CirclePlus class="w-6 h-6 text-indigo-600"/>
+      <CheckCheck class="w-6 h-6 text-indigo-600"/>
       <h2 class="text-xl font-semibold text-gray-800">
         {{ t('edit', {content: t('voucher')}) }}
       </h2>

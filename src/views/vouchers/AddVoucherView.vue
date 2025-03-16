@@ -103,6 +103,7 @@ const addVoucher = async () => {
           <input
               required
               type="number"
+              min="1"
               :max="newVoucher.loaiGiamGia === 0 ? 50 : null"
               v-model="newVoucher.giaTriGiamGia"
               :placeholder="`${t('enter')} ${t('value')} ${t('voucher')}`"

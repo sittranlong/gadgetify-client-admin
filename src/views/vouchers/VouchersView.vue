@@ -114,7 +114,7 @@ onMounted(async () => {
             </th>
           </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody v-if="filteredVouchers.length > 0" class="bg-white divide-y divide-gray-200">
           <tr v-for="(voucher, index) in filteredVouchers" :key="voucher.id" class="hover:bg-gray-50">
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               {{ voucher.maPhieuGiamGia }}
@@ -128,7 +128,10 @@ onMounted(async () => {
               </a-tag>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              <a-tag :color="new Date(voucher.ngayKetThuc) < new Date() ? 'error' : 'success'">
+              <a-tag v-if="new Date(voucher.ngayBatDau + 'T00:00:00') > new Date()" color="warning">
+                {{ t('not_started') }}
+              </a-tag>
+              <a-tag v-else :color="new Date(voucher.ngayKetThuc) < new Date() ? 'error' : 'success'">
                 {{ new Date(voucher.ngayKetThuc) < new Date() ? t('expired') : t('not_expired') }}
               </a-tag>
             </td>
@@ -167,6 +170,13 @@ onMounted(async () => {
                   </button>
                 </a-popconfirm>
               </div>
+            </td>
+          </tr>
+          </tbody>
+          <tbody v-else class="bg-white divide-y divide-gray-200">
+          <tr>
+            <td colspan="7" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+              <a-empty :description="t('no_data')"/>
             </td>
           </tr>
           </tbody>
