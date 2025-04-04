@@ -11,7 +11,7 @@ import {
   Pencil,
   Scale,
   Tag,
-  Trash2
+  Trash2, Warehouse
 } from 'lucide-vue-next';
 import {message} from 'ant-design-vue';
 import useCategoryStore from "@/stores/category.js";
@@ -394,8 +394,44 @@ const saveProduct = async () => {
 let productDetailId = null
 const route = useRoute();
 const productParamId = computed(() => route.params.id);
+const addBrandModalVisible = ref(false);
+const newBrandName = ref('');
+const brandsList = ref([]);
+
+const handleBrandChange = (event) => {
+  if (productForm.value.hang === 'add_new') {
+    addBrandModalVisible.value = true;
+    productForm.value.hang = ''; // Reset selection
+  }
+};
+
+const handleAddBrand = async () => {
+  if (!newBrandName.value.trim()) {
+    message.error(`${t('enter')} ${t('name')} ${t('brand')}`);
+    return;
+  }
+
+  brandsList.value.unshift(newBrandName.value);
+  productForm.value.hang = newBrandName.value;
+  addBrandModalVisible.value = false;
+  newBrandName.value = '';
+};
+
+const handleCancelAddBrand = () => {
+  addBrandModalVisible.value = false;
+  newBrandName.value = '';
+};
+
+const handleCategoryChange = (event) => {
+  if (productForm.value.danhMuc.id === 'add_new') {
+    addCategoryModalVisible.value = true;
+    productForm.value.danhMuc.id = ''; // Reset selection
+  }
+};
+
 onMounted(async () => {
   await categoryStore.getCategoriesList();
+  brandsList.value = await productStore.findAllBrands();
   await productStore.findById(productParamId.value);
   productForm.value = productStore.product;
   console.log(productForm.value);
@@ -526,8 +562,12 @@ onMounted(async () => {
                     v-model="productForm.danhMuc.id"
                     required
                     class="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors appearance-none"
+                    @change="handleCategoryChange"
                 >
                   <option value="" selected>{{ t('select') }}</option>
+                  <option value="add_new">
+                    {{ t('add', {content: t('category')}) }}
+                  </option>
                   <option v-for="category in categoryStore.categoriesList" :value="category.id">{{
                       category.tenDanhMuc
                     }}
@@ -535,16 +575,32 @@ onMounted(async () => {
                 </select>
                 <Tag class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"/>
               </div>
-              <button
-                  @click="addCategoryModalVisible = true"
-                  type="button"
-                  class="p-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 transition-all duration-200"
-              >
-                <CirclePlus class="w-5 h-5"/>
-              </button>
             </div>
           </div>
 
+          <!-- Thương hiệu sản phẩm -->
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{
+                `${t('brand')} ${t('product')}`
+              }}</label>
+            <div class="flex items-center gap-3">
+              <div class="relative flex-1">
+                <select
+                    v-model="productForm.hang"
+                    required
+                    class="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors appearance-none"
+                    @change="handleBrandChange"
+                >
+                  <option value="" selected>{{ t('select') }}</option>
+                  <option value="add_new">{{ t('add', {content: t('brand')}) }}</option>
+                  <option v-for="brand in brandsList" :key="brand" :value="brand">
+                    {{ brand }}
+                  </option>
+                </select>
+                <Warehouse class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"/>
+              </div>
+            </div>
+          </div>
           <!-- Giá sản phẩm -->
           <div class="relative">
             <label class="block text-sm font-medium text-gray-700 mb-1">{{
@@ -575,22 +631,6 @@ onMounted(async () => {
               <CheckCircle class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"/>
             </div>
           </div>
-
-          <!-- Cân nặng sản phẩm -->
-          <div class="relative">
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ `${t('weight')} ${t('product')}` }}</label>
-            <div class="relative">
-              <input
-                  required
-                  v-model="productForm.canNang"
-                  type="number"
-                  :placeholder="`${t('enter')} ${t('weight')}`"
-                  class="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
-              >
-              <Scale class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"/>
-            </div>
-          </div>
-
           <!-- Trạng thái sản phẩm -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">{{ `${t('status')} ${t('product')}` }}</label>
@@ -618,7 +658,6 @@ onMounted(async () => {
             </div>
           </div>
 
-          <!-- Mô tả sản phẩm Vietnamese -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">{{
                 `${t('description')} ${t('product')} (${t('vietnamese')} - ${t('default')})`
@@ -626,6 +665,8 @@ onMounted(async () => {
             <div class="relative">
               <textarea
                   v-model="productForm.moTa"
+                  minlength="5"
+                  required
                   :placeholder="`${t('enter')} ${t('description')} ${t('product')}`"
                   rows="4"
                   class="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors resize-y"
@@ -634,7 +675,6 @@ onMounted(async () => {
             </div>
           </div>
         </div>
-        <!--        Mô tả sản phẩm English -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1 mt-5">{{
               `${t('description')} ${t('product')} (${t('english')})`
@@ -1079,5 +1119,25 @@ onMounted(async () => {
   </form>
   <a-modal :footer="null" v-model:open="addCategoryModalVisible" :title="null">
     <AddCategoryView style="border: none; box-shadow: none; background-color: transparent; padding: 0; margin: 0;"/>
+  </a-modal>
+  <a-modal
+      v-model:open="addBrandModalVisible"
+      :title="t('add', {content: t('brand')})"
+      @ok="handleAddBrand"
+      @cancel="handleCancelAddBrand"
+      :ok-text="t('confirm')"
+      :cancel-text="t('cancel')"
+  >
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">{{ t('name') }}</label>
+        <input
+            v-model="newBrandName"
+            type="text"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            :placeholder="`${t('enter')} ${t('name')} ${t('brand')}`"
+        >
+      </div>
+    </div>
   </a-modal>
 </template>

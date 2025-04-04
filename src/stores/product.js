@@ -48,6 +48,9 @@ const useProductStore = defineStore('product', () => {
     const deleteProductDetail = async (id) => {
         await axios.delete(`/chi-tiet-san-pham/san-pham/${id}`)
     }
+    const findAllBrands = async () => {
+        return (await axios.get('/san-pham/hang')).data.data
+    }
     return {
         product,
         productsList,
@@ -63,7 +66,8 @@ const useProductStore = defineStore('product', () => {
         findImages,
         findProductDetail,
         deleteProductImages,
-        deleteProductDetail
+        deleteProductDetail,
+        findAllBrands
     }
 });
 export default useProductStore

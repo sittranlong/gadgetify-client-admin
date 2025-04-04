@@ -7,6 +7,7 @@ const messages = {
         welcome: 'Welcome to our store',
         price: 'Price',
         categories: 'Categories',
+        category: 'Category',
         products: 'Products',
         dashboard: 'Dashboard',
         users: 'Users',
@@ -143,12 +144,14 @@ const messages = {
         current: 'Current',
         list_product_not_empty: 'No products added, please add products',
         not_started: 'Not Started',
+        brand: 'Brand',
     },
     vi: {
         hello: 'Xin chào',
         welcome: 'Chào mừng đến với cửa hàng của chúng tôi',
         price: 'Giá',
         categories: 'Danh Mục',
+        category: 'Danh Mục',
         products: 'Sản Phẩm',
         dashboard: 'Trang chủ',
         users: 'Người dùng',
@@ -285,6 +288,7 @@ const messages = {
         current: 'Hiện Tại',
         list_product_not_empty: 'Chưa có sản phẩm nào được thêm, vui lòng thêm sản phẩm',
         not_started: 'Chưa Bắt Đầu',
+        brand: 'Thương Hiệu',
     },
 };
 const numberFormats = {
